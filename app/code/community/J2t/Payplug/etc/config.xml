@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+       <J2t_Payplug>
+          <version>1.0.0</version>
+       </J2t_Payplug>
+    </modules>
+ 
+    <global>
+        <blocks>
+            <j2tpayplug>
+                <class>J2t_Payplug_Block</class>
+            </j2tpayplug>
+        </blocks>
+        
+        <helpers>
+            <j2tpayplug>
+                <class>J2t_Payplug_Helper</class>
+            </j2tpayplug>
+        </helpers>
+ 
+        <models>
+            <j2tpayplug>
+                <class>J2t_Payplug_Model</class>
+                <resourceModel>j2tpayplug_resource</resourceModel>
+            </j2tpayplug>
+            <j2tpayplug_resource>
+                <class>J2t_Payplug_Model_Resource</class>
+                <deprecatedNode>j2tpayplug_mysql4</deprecatedNode>
+                <entities>
+                    <cert>
+                        <table>payplug_cert</table>
+                    </cert>
+                </entities>
+            </j2tpayplug_resource>
+        </models>
+        <resources>
+            <j2tpayplug_setup>
+                <setup>
+                    <module>J2t_Payplug</module>
+                    <class>Mage_Paypal_Model_Resource_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </j2tpayplug_setup>
+            <j2tpayplug_write>
+                <connection>
+                  <use>core_write</use>
+                </connection>
+            </j2tpayplug_write>
+            <j2tpayplug_read>
+               <connection>
+                <use>core_read</use>
+              </connection>
+            </j2tpayplug_read>
+            
+        </resources>
+        
+        <events>
+            <controller_action_predispatch_adminhtml_system_config_save>
+                <observers>
+                    <j2tpayplug_saveadmin>
+                        <type>singleton</type>
+                        <class>J2t_Payplug_Model_Observer</class>
+                        <method>saveConfigPayPlug</method>
+                    </j2tpayplug_saveadmin>
+                </observers>
+            </controller_action_predispatch_adminhtml_system_config_save>
+        </events>
+        
+    </global>
+    
+    <frontend>
+        <routers>
+            <j2tpayplug>
+                <use>standard</use>
+                <args>
+                    <module>J2t_Payplug</module>
+                    <frontName>j2tpayplug</frontName>
+                </args>
+            </j2tpayplug>
+        </routers>
+        
+        <translate>
+            <modules>
+                <j2tpayplug>
+                    <files>
+                        <default>j2t_payplug.csv</default>
+                    </files>
+                </j2tpayplug>
+            </modules>
+        </translate>
+    </frontend>
+    <adminhtml>
+        <translate>
+            <modules>
+                <j2tpayplug>
+                    <files>
+                        <default>j2t_payplug.csv</default>
+                    </files>
+                </j2tpayplug>
+            </modules>
+        </translate>
+    </adminhtml>
+    
+    <default>
+        <payment>
+            <j2tpayplug>
+                <active>0</active>
+                <model>j2tpayplug/paymentMethod</model>
+                <new_order_status>pending</new_order_status>
+                <complete_order_status>processing</complete_order_status>
+                <cancel_order_status>canceled</cancel_order_status>
+                <invoice>0</invoice>
+                <title>PayPlug - Payment by Visa or Mastercard</title>
+                <payment_action>authorize</payment_action>
+                <allowspecific>0</allowspecific>
+            </j2tpayplug>
+         </payment>
+    </default>
+</config>

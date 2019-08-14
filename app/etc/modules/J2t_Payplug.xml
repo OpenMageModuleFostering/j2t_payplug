@@ -1,0 +1,11 @@
+<config>
+    <modules>
+        <J2t_Payplug>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Mage_Payment />
+            </depends>
+        </J2t_Payplug>
+    </modules>
+</config>
