@@ -2,7 +2,7 @@
 <config>
     <modules>
        <J2t_Payplug>
-          <version>1.0.6</version>
+          <version>1.0.7</version>
        </J2t_Payplug>
     </modules>
  
@@ -76,22 +76,22 @@
         
         <translate>
             <modules>
-                <j2tpayplug>
+                <J2t_Payplug>
                     <files>
                         <default>j2t_payplug.csv</default>
                     </files>
-                </j2tpayplug>
+                </J2t_Payplug>
             </modules>
         </translate>
     </frontend>
     <adminhtml>
         <translate>
             <modules>
-                <j2tpayplug>
+                <J2t_Payplug>
                     <files>
                         <default>j2t_payplug.csv</default>
                     </files>
-                </j2tpayplug>
+                </J2t_Payplug>
             </modules>
         </translate>
         
