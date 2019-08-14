@@ -2,7 +2,7 @@
 <config>
     <modules>
        <J2t_Payplug>
-          <version>1.0.8</version>
+          <version>1.0.9</version>
        </J2t_Payplug>
     </modules>
  
@@ -120,6 +120,7 @@
         <payment>
             <j2tpayplug>
                 <active>0</active>
+                <sandbox>0</sandbox>
                 <model>j2tpayplug/paymentMethod</model>
                 <new_order_status>pending</new_order_status>
                 <complete_order_status>processing</complete_order_status>

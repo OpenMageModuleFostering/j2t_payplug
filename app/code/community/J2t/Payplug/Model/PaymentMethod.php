@@ -138,11 +138,16 @@ class J2t_Payplug_Model_PaymentMethod extends Mage_Payment_Model_Method_Abstract
             'email'         =>  $order->getCustomerEmail(),
             'firstname'     =>  $order->getCustomerFirstname(),
             'lastname'      =>  $order->getCustomerLastname(),
+            'first_name'     =>  $order->getCustomerFirstname(),
+            'last_name'      =>  $order->getCustomerLastname(),
             //'order'         =>  $this->getQuote()->getId(),
             'order'         =>  $orderIncrementId,
             'customer'      =>  $order->getCustomerId()
         );
         
+        if(Mage::getStoreConfig('payment/j2tpayplug/sandbox', $this->getQuote()->getStoreId())){
+            $params['is_test'] = 'true';
+        }
         
         $url_params = http_build_query($params);
         $privatekey = Mage::getStoreConfig('payment/j2tpayplug/private_key', $this->getQuote()->getStoreId());
