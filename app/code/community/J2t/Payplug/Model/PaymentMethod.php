@@ -128,7 +128,7 @@ class J2t_Payplug_Model_PaymentMethod extends Mage_Payment_Model_Method_Abstract
         $url_payment= Mage::getStoreConfig('payment/j2tpayplug/module_url', $this->getQuote()->getStoreId());
         
         $params = array(
-            'amount'        =>  ($order->getGrandTotal()*100),
+            'amount'        =>  ($order->getBaseGrandTotal()*100),
             'custom_data'   =>  $order->getStoreId(),
             'origin'        =>  'Magento  '.Mage::getVersion().' module '.Mage::getConfig()->getModuleConfig("J2t_Payplug")->version,
             'currency'      =>  $order->getOrderCurrencyCode(),
