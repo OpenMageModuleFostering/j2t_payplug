@@ -1,9 +1,0 @@
-ul.tabs a.j2t-all-tab span, ul.tabs a.j2t-all-tab:hover span {
-    background: url("./images/j2t_all_1.png") no-repeat scroll 0 0 transparent;
-    height: 0;
-    overflow: hidden;
-    padding: 21px 0 0;
-    width: 192px;
-}
-
-ul.tabs a.j2t-all-tab, ul.tabs a.j2t-all-tab {border:none;}

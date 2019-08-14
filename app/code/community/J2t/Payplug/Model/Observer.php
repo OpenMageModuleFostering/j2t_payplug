@@ -3,12 +3,23 @@
 class J2t_Payplug_Model_Observer extends Mage_Core_Model_Session_Abstract
 {
     const URL_AUTOCONFIG = 'https://www.payplug.fr/portal/ecommerce/autoconfig';
+    const URL_AUTOCONFIG_TEST = 'https://www.payplug.fr/portal/test/ecommerce/autoconfig';
     protected function createCertFile($user, $pass){
-        $process = curl_init(self::URL_AUTOCONFIG);
+        $url = self::URL_AUTOCONFIG;
+        if (($groups = Mage::app()->getRequest()->getPost('groups'))) {
+            if (isset($groups['j2tpayplug']) && isset($groups['j2tpayplug']['fields'])
+                    && isset($groups['j2tpayplug']['fields']['sandbox']) && isset($groups['j2tpayplug']['fields']['sandbox']['value'])
+                    && $groups['j2tpayplug']['fields']['sandbox']['value']){
+                $url = self::URL_AUTOCONFIG_TEST;
+            }
+        }
+        
+        $process = curl_init($url);
+        //$process = curl_init(self::URL_AUTOCONFIG);
         
         curl_setopt($process, CURLOPT_USERPWD, $user.':'.$pass);
         curl_setopt($process, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($process, CURLOPT_SSLVERSION, 3);
+        //curl_setopt($process, CURLOPT_SSLVERSION, 3);
         $answer = curl_exec($process);
         
         $errorCurl = curl_errno($process);
@@ -91,17 +102,6 @@ class J2t_Payplug_Model_Observer extends Mage_Core_Model_Session_Abstract
                 && $pwd != "******"){
             $this->createCertFile($user, $pwd);
         }
-    }
-    
-    public function preDispatch(Varien_Event_Observer $observer)
-    {
-        if (Mage::getSingleton('admin/session')->isLoggedIn()) {
-            $feedModel  = Mage::getModel('j2tpayplug/feed');
-            /* @var $feedModel Mage_AdminNotification_Model_Feed */
-
-            $feedModel->checkUpdate();
-        }
-
     }
 }
 

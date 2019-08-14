@@ -2,7 +2,7 @@
 <config>
     <modules>
        <J2t_Payplug>
-          <version>1.0.1</version>
+          <version>1.0.10</version>
        </J2t_Payplug>
     </modules>
  
@@ -102,26 +102,6 @@
                 </j2tpayplug>
             </modules>
         </translate>
-        
-        <layout>
-            <updates>
-                <j2t_all module="j2tpayplug">
-                    <file>j2tpayplug.xml</file>
-                </j2t_all>
-            </updates>
-        </layout>
-        
-        <events>
-            <controller_action_predispatch>
-                <observers>
-                    <j2tpayplug_predispatch>
-                        <class>J2t_Payplug_Model_Observer</class>
-                        <method>preDispatch</method>
-                    </j2tpayplug_predispatch>
-                </observers>
-            </controller_action_predispatch>
-        </events>
-        
     </adminhtml>
     
     <default>
@@ -136,12 +116,8 @@
                 <title>PayPlug - Payment by Visa or Mastercard</title>
                 <payment_action>authorize</payment_action>
                 <allowspecific>0</allowspecific>
+                <sandbox>0</sandbox>
             </j2tpayplug>
-        </payment>
-        <system>
-            <j2t_all>
-                <feed_url_j2t>j2t-design.net/notifications.rss</feed_url_j2t>
-            </j2t_all>
-        </system>
+         </payment>
     </default>
 </config>
