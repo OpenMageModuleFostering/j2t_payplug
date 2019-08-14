@@ -172,6 +172,8 @@ class J2t_Payplug_PaymentController extends Mage_Core_Controller_Front_Action
                         foreach ($invoices as $invoice) {
                             $creditmemo = $service->prepareInvoiceCreditmemo($invoice);
                             $creditmemo->refund();
+                            $creditmemo->getInvoice()->save();
+                            $creditmemo->save();
                         }
                         //if (!sizeof($invoices)){
                             $order->setState(Mage::getStoreConfig('payment/j2tpayplug/cancel_order_status', $data['custom_data']));
