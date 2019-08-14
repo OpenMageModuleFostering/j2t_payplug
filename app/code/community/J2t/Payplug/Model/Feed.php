@@ -1,5 +1,5 @@
 <?php
-Class J2t_All_Model_Feed extends Mage_AdminNotification_Model_Feed {
+Class J2t_Payplug_Model_Feed extends Mage_AdminNotification_Model_Feed {
 
     const XML_FEED_URL_PATH_J2T = 'system/j2t_all/feed_url_j2t';
 

@@ -3,7 +3,7 @@
     <default>
         <reference name="head">
             <action method="addCss">
-                <name>j2t_all_admin.css</name>
+                <name>j2t_all_admin_1.css</name>
             </action>
         </reference>
     </default>
