@@ -88,6 +88,14 @@ class J2t_Payplug_PaymentController extends Mage_Core_Controller_Front_Action
                             $order->addStatusHistoryComment(Mage::helper('j2tpayplug')->__('Payment has been captured by Payment Gateway. Transaction id: %s', $data['id_transaction']));
                             $order->save();
                             
+                            try
+                            {
+                                $order->sendNewOrderEmail();
+                            } 
+                            catch (Exception $ex) {  
+                                Mage::logException($ex);
+                            }
+                            
                             if (Mage::getStoreConfig('payment/j2tpayplug/invoice', $data['custom_data'])){
                                 //generate invoice
                                 try {
@@ -152,8 +160,41 @@ class J2t_Payplug_PaymentController extends Mage_Core_Controller_Front_Action
     public function cancelAction()
     {
         //redirect to cart and error message payment has been declined
+        if ($this->_getSession()->getLastRealOrderId())
+        {
+            $order = Mage::getModel('sales/order')->loadByIncrementId($this->_getSession()->getLastRealOrderId());
+            if ($order->getId())
+            {
+                //Cancel order
+                if ($order->getState() != Mage_Sales_Model_Order::STATE_CANCELED)
+                {
+                    $order->registerCancellation("Canceled by Payment Provider")->save();
+                }
+                $quote = Mage::getModel('sales/quote')
+                    ->load($order->getQuoteId());
+                //Return quote
+                if ($quote->getId())
+                {
+                    $quote->setIsActive(1)
+                        ->setReservedOrderId(NULL)
+                        ->save();
+                    $this->_getSession()->replaceQuote($quote);
+                }
+
+                //Unset data
+                $this->_getSession()->unsLastRealOrderId();
+            }
+        }
+        //redirect to cart and error message payment has been declined
         $this->_getSession()->addError(Mage::helper('j2tpayplug')->escapeHtml(Mage::helper('j2tpayplug')->__('There has been a problem during the payment.')));
         $this->_redirect('checkout/cart');
     }
+    
+//    public function cancelAction()
+//    {
+//        //redirect to cart and error message payment has been declined
+//        $this->_getSession()->addError(Mage::helper('j2tpayplug')->escapeHtml(Mage::helper('j2tpayplug')->__('There has been a problem during the payment.')));
+//        $this->_redirect('checkout/cart');
+//    }
     
 }
