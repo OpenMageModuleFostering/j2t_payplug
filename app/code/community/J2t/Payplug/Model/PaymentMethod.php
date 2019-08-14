@@ -156,13 +156,13 @@ class J2t_Payplug_Model_PaymentMethod extends Mage_Payment_Model_Method_Abstract
     
     public function isAvailable($quote = null)
     {
-        $min = Mage::getStoreConfig('payment/j2tpayplug/min_amount', $quote->getStoreId());
-        $max = Mage::getStoreConfig('payment/j2tpayplug/max_amount', $quote->getStoreId());
-        if (parent::isAvailable($quote) && $quote->getGrandTotal() >= $min && $quote->getGrandTotal() <= $max
-                && Mage::getStoreConfig('payment/j2tpayplug/private_key', $quote->getStoreId())
-                && Mage::getStoreConfig('payment/j2tpayplug/public_key', $quote->getStoreId())
-                && Mage::getStoreConfig('payment/j2tpayplug/module_url', $quote->getStoreId())
-                && Mage::getStoreConfig('payment/j2tpayplug/currencies', $quote->getStoreId())
+        $min = Mage::getStoreConfig('payment/j2tpayplug/min_amount', $quote ? $quote->getStoreId() : null);
+        $max = Mage::getStoreConfig('payment/j2tpayplug/max_amount', $quote ? $quote->getStoreId() : null);
+        if (parent::isAvailable($quote) && $quote && $quote->getGrandTotal() >= $min && $quote->getGrandTotal() <= $max
+                && Mage::getStoreConfig('payment/j2tpayplug/private_key', $quote ? $quote->getStoreId() : null)
+                && Mage::getStoreConfig('payment/j2tpayplug/public_key', $quote ? $quote->getStoreId() : null)
+                && Mage::getStoreConfig('payment/j2tpayplug/module_url', $quote ? $quote->getStoreId() : null)
+                && Mage::getStoreConfig('payment/j2tpayplug/currencies', $quote ? $quote->getStoreId() : null)
                         ) {
             return true;
         }

@@ -58,7 +58,7 @@
         </j2t_all>
         <payment>
             <groups>
-                <j2tpayplug translate="label" module="paygate">
+                <j2tpayplug translate="label" module="j2tpayplug">
                     <label>Pay Plug</label>
                     <sort_order>670</sort_order>
                     <show_in_default>1</show_in_default>

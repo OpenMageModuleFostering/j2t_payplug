@@ -8,11 +8,10 @@ class J2t_Payplug_Model_Observer extends Mage_Core_Model_Session_Abstract
         
         curl_setopt($process, CURLOPT_USERPWD, $user.':'.$pass);
         curl_setopt($process, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($process, CURLOPT_SSLVERSION, 3);
+        //curl_setopt($process, CURLOPT_SSLVERSION, 3);
         $answer = curl_exec($process);
         
         $errorCurl = curl_errno($process);
-        
         
         curl_close($process);
         if($errorCurl == 0) {
