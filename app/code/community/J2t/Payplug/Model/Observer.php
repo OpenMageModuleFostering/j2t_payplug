@@ -14,6 +14,35 @@ class J2t_Payplug_Model_Observer extends Mage_Core_Model_Session_Abstract
             }
         }
         
+        /*$curl = new Varien_Http_Adapter_Curl();
+        $curl->setConfig(array(
+            //'verifypeer' => strpos($url, 'https://') !== false,
+            //'header' => true,
+            'timeout' => 35,
+        ));
+
+        
+        $curl->addOption(CURLOPT_USERPWD, $user.':'.$pass);
+        $curl->addOption(CURLOPT_RETURNTRANSFER, true);
+        $curl->addOption(CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1  );
+        
+        $curl->write(Zend_Http_Client::GET, $url, '1.1');
+        $answer = $curl->read();
+        $errorCurl = $curl->getErrno();
+        if ($curl->getErrno() || $curl->getError()) {
+            //throw new Exception(Mage::helper('wordpress')->__('CURL (%s): %s', $curl->getErrno(), $curl->getError()));
+            $errorCurl = $errorCurl." ".$curl->getError();
+        } else {
+            $answer = preg_split('/^r?$/m', $answer, 2); 
+            $answer = trim($answer[1]);
+        }
+        
+        
+        $curl->close();*/
+        
+        
+        ////////////////////////////////////////
+        
         $process = curl_init($url);
         //$process = curl_init(self::URL_AUTOCONFIG);
         
@@ -21,11 +50,9 @@ class J2t_Payplug_Model_Observer extends Mage_Core_Model_Session_Abstract
         curl_setopt($process, CURLOPT_RETURNTRANSFER, TRUE);
         //curl_setopt($process, CURLOPT_SSLVERSION, 3);
         $answer = curl_exec($process);
-        
         $errorCurl = curl_errno($process);
-        
-        
         curl_close($process);
+       
         if($errorCurl == 0) {
             $jsonAnswer = json_decode($answer);
             $authorizationSuccess = false;
