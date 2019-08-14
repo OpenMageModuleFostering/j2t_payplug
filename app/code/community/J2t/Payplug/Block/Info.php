@@ -37,6 +37,13 @@ class J2t_Payplug_Block_Info extends Mage_Payment_Block_Info
     {
         return $this->getInfo()->getMethodInstance()->getCode();
     }
+    
+    
+    public function toPdf()
+    {
+        $this->setTemplate('j2tpayplug/pdf/info.phtml');
+        return $this->toHtml();
+    }
 
     
 }

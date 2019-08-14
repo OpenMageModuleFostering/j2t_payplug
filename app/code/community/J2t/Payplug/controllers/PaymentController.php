@@ -30,6 +30,33 @@ class J2t_Payplug_PaymentController extends Mage_Core_Controller_Front_Action
         $this->_redirectUrl($url);
     }
     
+    
+    protected function _createInvoice($order)
+    {
+        if (!$order->canInvoice()) {
+            return;
+        }
+        /*$invoice = $order->prepareInvoice();
+        $invoice->register()->capture();
+        $order->addRelatedObject($invoice);*/
+        
+        ////////////////
+        
+        $invoice = $order->prepareInvoice();
+        if (!$invoice->getTotalQty()) {
+            Mage::throwException(Mage::helper('j2tpayplug')->__('Cannot create an invoice without products.'));
+        }
+
+        $invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_OFFLINE);
+        $invoice->register();
+        /*$transactionSave = Mage::getModel('core/resource_transaction')
+            ->addObject($invoice)
+            ->addObject($invoice->getOrder());
+
+        $transactionSave->save();*/
+        $order->addRelatedObject($invoice);
+    }
+    
     public function ipnAction()
     {
         $headers = array();
@@ -83,22 +110,28 @@ class J2t_Payplug_PaymentController extends Mage_Core_Controller_Front_Action
                         }
                         // If order state is payment in progress by payplug
                         elseif($order->getState() == Mage::getStoreConfig('payment/j2tpayplug/new_order_status', $data['custom_data'])){
-                            $order->setState(Mage::getStoreConfig('payment/j2tpayplug/complete_order_status', $data['custom_data']));
+                            /*$order->setState(Mage::getStoreConfig('payment/j2tpayplug/complete_order_status', $data['custom_data']));
                             $order->setStatus(Mage::getStoreConfig('payment/j2tpayplug/complete_order_status', $data['custom_data']));
                             $order->addStatusHistoryComment(Mage::helper('j2tpayplug')->__('Payment has been captured by Payment Gateway. Transaction id: %s', $data['id_transaction']));
-                            $order->save();
+                            $order->save();*/
                             
-                            try
-                            {
-                                $order->sendNewOrderEmail();
-                            } 
-                            catch (Exception $ex) {  
-                                Mage::logException($ex);
-                            }
+                            $order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true, Mage::helper('j2tpayplug')->__('Payment has been captured by Payment Gateway. Transaction id: %s', $data['id_transaction']));
+                            // save transaction ID
+                            $order->getPayment()->setLastTransId($data['id_transaction']);
+                            // send new order email
+                            $order->sendNewOrderEmail();
+                            $order->setEmailSent(true);
                             
                             if (Mage::getStoreConfig('payment/j2tpayplug/invoice', $data['custom_data'])){
+                                $this->_createInvoice($order);
+                            }
+                            
+                            $order->save();
+                            
+                            /*if (Mage::getStoreConfig('payment/j2tpayplug/invoice', $data['custom_data'])){
                                 //generate invoice
                                 try {
+                                    
                                     if(!$order->canInvoice())
                                     {
                                         Mage::throwException(Mage::helper('j2tpayplug')->__('Cannot create an invoice.'));
@@ -119,11 +152,16 @@ class J2t_Payplug_PaymentController extends Mage_Core_Controller_Front_Action
                                 catch (Mage_Core_Exception $e) {
 
                                 }
-                            }
+                            }*/
                             
                         }
                     } // If status refund
-                    else if($status == self::PAYMENT_STATUS_REFUND || $status == self::PAYMENT_STATUS_CANCEL){
+                    else if($status == self::PAYMENT_STATUS_CANCEL){
+                        $order->cancel();
+                        $order->addStatusToHistory(Mage_Sales_Model_Order::STATE_CANCELED, Mage::helper('j2tpayplug')->__('Payment canceled by Payment Gateway. Transaction id: %s', $data['id_transaction']));
+                        $order->save();
+                    }
+                    else if($status == self::PAYMENT_STATUS_REFUND){
                         $invoices = array();
                         foreach ($order->getInvoiceCollection() as $invoice) {
                             if ($invoice->canRefund()) {
@@ -138,7 +176,8 @@ class J2t_Payplug_PaymentController extends Mage_Core_Controller_Front_Action
                         //if (!sizeof($invoices)){
                             $order->setState(Mage::getStoreConfig('payment/j2tpayplug/cancel_order_status', $data['custom_data']));
                             $order->setStatus(Mage::getStoreConfig('payment/j2tpayplug/cancel_order_status', $data['custom_data']));
-                            $order->addStatusHistoryComment(Mage::helper('j2tpayplug')->__('Payment canceled/refunded by Payment Gateway. Transaction id: %s', $data['id_transaction']));
+                            $order->addStatusToHistory(Mage_Sales_Model_Order::STATE_CLOSED, Mage::helper('j2tpayplug')->__('Payment refunded by Payment Gateway. Transaction id: %s', $data['id_transaction']));
+                            //$order->addStatusHistoryComment(Mage::helper('j2tpayplug')->__('Payment refunded by Payment Gateway. Transaction id: %s', $data['id_transaction']));
                             $order->save();
                         //}
                     }
@@ -160,41 +199,8 @@ class J2t_Payplug_PaymentController extends Mage_Core_Controller_Front_Action
     public function cancelAction()
     {
         //redirect to cart and error message payment has been declined
-        if ($this->_getSession()->getLastRealOrderId())
-        {
-            $order = Mage::getModel('sales/order')->loadByIncrementId($this->_getSession()->getLastRealOrderId());
-            if ($order->getId())
-            {
-                //Cancel order
-                if ($order->getState() != Mage_Sales_Model_Order::STATE_CANCELED)
-                {
-                    $order->registerCancellation("Canceled by Payment Provider")->save();
-                }
-                $quote = Mage::getModel('sales/quote')
-                    ->load($order->getQuoteId());
-                //Return quote
-                if ($quote->getId())
-                {
-                    $quote->setIsActive(1)
-                        ->setReservedOrderId(NULL)
-                        ->save();
-                    $this->_getSession()->replaceQuote($quote);
-                }
-
-                //Unset data
-                $this->_getSession()->unsLastRealOrderId();
-            }
-        }
-        //redirect to cart and error message payment has been declined
         $this->_getSession()->addError(Mage::helper('j2tpayplug')->escapeHtml(Mage::helper('j2tpayplug')->__('There has been a problem during the payment.')));
         $this->_redirect('checkout/cart');
     }
-    
-//    public function cancelAction()
-//    {
-//        //redirect to cart and error message payment has been declined
-//        $this->_getSession()->addError(Mage::helper('j2tpayplug')->escapeHtml(Mage::helper('j2tpayplug')->__('There has been a problem during the payment.')));
-//        $this->_redirect('checkout/cart');
-//    }
     
 }
