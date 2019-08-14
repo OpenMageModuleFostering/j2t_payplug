@@ -22,3 +22,4 @@
 "Approved order status","Statut commande approuvée"
 "Rejected order status","Statut commande rejetée"
 "Invoice when complete","Facturer les commandes valides"
+"In order to use this payment method, it is necessary to create an account on <a target='_blank' href='http://www.payplug.fr/inscription?sponsor=83'>PayPlug</a>.","Afin de pouvoir utiliser ce mode de paiement, il est nécessaire de créer un compte sur <a target='_blank' href='http://www.payplug.fr/inscription?sponsor=83'>PayPlug</a>."

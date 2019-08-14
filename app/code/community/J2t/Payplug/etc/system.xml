@@ -64,28 +64,7 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
-                    
-                    <comment><![CDATA[
-                            <script type="text/javascript">
-                                
-                                hideAll = function(){
-                                    $('payment_j2tpayplug_private_key').up(1).hide();
-                                    $('payment_j2tpayplug_public_key').up(1).hide();
-                                    $('payment_j2tpayplug_module_url').up(1).hide();
-                                    $('payment_j2tpayplug_min_amount').up(1).hide();
-                                    $('payment_j2tpayplug_max_amount').up(1).hide();
-                                    $('payment_j2tpayplug_currencies').up(1).hide();
-                                };
-
-                                Event.observe(window, 'load', function() {
-                                    hideAll();
-                                });
-                            </script>
-                            ]]>
-                    </comment>
-                    
-                    
-                    
+                    <comment><![CDATA[In order to use this payment method, it is necessary to create an account on <a target='_blank' href='http://www.payplug.fr/inscription?sponsor=83'>PayPlug</a>.]]></comment>
                     <fields>
                         <active translate="label">
                             <label>Enabled</label>
@@ -95,6 +74,22 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
+                            <comment><![CDATA[
+                                <script type="text/javascript">
+                                    hideAll = function(){
+                                        $('payment_j2tpayplug_private_key').up(1).hide();
+                                        $('payment_j2tpayplug_public_key').up(1).hide();
+                                        $('payment_j2tpayplug_module_url').up(1).hide();
+                                        $('payment_j2tpayplug_min_amount').up(1).hide();
+                                        $('payment_j2tpayplug_max_amount').up(1).hide();
+                                        $('payment_j2tpayplug_currencies').up(1).hide();
+                                    };
+
+                                    Event.observe(window, 'load', function() {
+                                        hideAll();
+                                    });
+                                </script>
+                            ]]></comment>
                         </active>
                         <title translate="label">
                             <label>Title</label>
