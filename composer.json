@@ -1,16 +1,19 @@
 {
-    "name": "OpenMageModuleFostering/J2t_Payplug",
+    "name": "OpenMageModuleFostering\/J2t_Payplug",
     "type": "magento-module",
     "license": "OSL-v3.0",
     "homepage": "",
     "description": "PayPlug payment gateway",
     "authors": [
-    {
-        "name": "J2T Design",
-        "email": "j2tdesign.net@gmail.com"
-    }
-],
+        {
+            "name": "J2T Design",
+            "email": "j2tdesign.net@gmail.com"
+        }
+    ],
     "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+        "magento-hackathon\/magento-composer-installer": "*"
+    },
+    "keywords": [
+        "openmage-module"
+    ]
 }
